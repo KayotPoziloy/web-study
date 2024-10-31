@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import context from './flux';
-import { createStore } from './store';
+import context from './react-redux';
+import { createStore } from './redux';
+import {store} from "./store";
 import App from './App';
 
-const store = createStore()
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

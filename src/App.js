@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState, memo, useCallback } from "react";
-import { useSelector, useDispatch } from './flux'
+import { useSelector, useDispatch } from './react-redux'
 
 function selectCount(state) {
     return state.count;
@@ -51,6 +51,45 @@ function movieTitleSelector(state, id) {
         return ""
     }
 }
+
+// const obj = {
+//     movies: [
+//         {
+//         movie: 'spider',
+//         actors: [
+//             {name: 'tobey m'}
+//         ]
+//         }
+//     ]
+// }
+//
+// obj.movies[0].actors[0].name = 'Tobey M'
+//
+// actors[0] = {
+//     name: 'Tobey M'
+// }
+//
+// actors = [{
+//     name: 'Tobey M'
+// }, ...actors]
+//
+// movie = {
+//     actors: [{
+//         name: 'Tobey M'
+//     }, ...actors]
+// }
+//
+// 1) incapsulation
+// 2) performance (immutability)
+
+
+
+
+
+
+
+
+
 
 const MovieListItem = memo(({ id }) => {
   const title = useSelector(movieTitleSelector, [id]);
