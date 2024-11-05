@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState, memo, useCallback } from "react";
 import { useSelector, useDispatch } from './react-redux'
+import { getMovies } from './moviesApi'
+import {render} from "@testing-library/react";
 
 function selectCount(state) {
     return state.count;
@@ -52,54 +54,32 @@ function movieTitleSelector(state, id) {
     }
 }
 
-// const obj = {
-//     movies: [
-//         {
-//         movie: 'spider',
-//         actors: [
-//             {name: 'tobey m'}
-//         ]
-//         }
-//     ]
-// }
-//
-// obj.movies[0].actors[0].name = 'Tobey M'
-//
-// actors[0] = {
-//     name: 'Tobey M'
-// }
-//
-// actors = [{
-//     name: 'Tobey M'
-// }, ...actors]
-//
-// movie = {
-//     actors: [{
-//         name: 'Tobey M'
-//     }, ...actors]
-// }
-//
-// 1) incapsulation
-// 2) performance (immutability)
-
-
-
-
-
-
-
-
-
-
 const MovieListItem = memo(({ id }) => {
   const title = useSelector(movieTitleSelector, [id]);
   const dispatch = useDispatch();
+
+  const count = useSelector((state) => {
+      return state.count;
+  })
+
+  const movies = useSelector((state) => {
+      return state.movies;
+  })
+
+  console.count('render')
 
   return (
       <li>
         {title}
         <button onClick={() => {
-          dispatch({ type: "DELETE", payload: {id} })
+          const firstIndex = movies.findIndex((movie) => {
+              return movie.id = id;
+          });
+          for (let i = firstIndex; i < firstIndex + count; i++) {
+              debugger
+              const movieId = movies[i].id;
+              dispatch({ type: "DELETE", payload: {id: movieId} })
+          }
         }}>
           Удалить
         </button>
@@ -115,6 +95,12 @@ function MovieList() {
   const [index1, setIndex1] = useState('2')
   const [index2, setIndex2] = useState('1')
   const dispatch = useDispatch();
+
+  useEffect(() => {
+      (async () => {
+          dispatch({ type: 'NEWMOVIES', payload: {json: await getMovies()} })
+      })()
+  })
 
   return (
       <div className="App">

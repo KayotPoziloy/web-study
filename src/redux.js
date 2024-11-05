@@ -1,5 +1,4 @@
 import { EventEmitter } from './emitter'
-import { swapElements } from "./utils";
 
 class Store extends EventEmitter {
     constructor(initState, rootReducer) {

@@ -7,3 +7,4 @@ export function swapElements(array, index1, index2) {
 
     return [...array]
 }
+

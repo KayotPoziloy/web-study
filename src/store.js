@@ -2,11 +2,7 @@ import {swapElements} from "./utils";
 import {combineReducers, createStore} from "./redux";
 
 const initState = {
-    movies: [
-        {id: 1, movie: 'spider man'},
-        {id: 2, movie: 'spider man 2'},
-        {id: 3, movie: 'spider man 3'}
-    ],
+    movies: [],
     deletedMovies: [],
     count: 0
 }
@@ -22,6 +18,8 @@ function moviesReducer(prevState, action) {
         return prevState.filter((movie) => movie.id !== action.payload.id );
     } else if (action.type === 'SWAP') {
         return swapElements(prevState, action.payload.index1, action.payload.index2);
+    } else if (action.type === 'NEWMOVIES') {
+        return action.payload.json
     }
     return prevState
 }
