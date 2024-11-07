@@ -1,9 +1,11 @@
 import logo from './logo.svg';
+import React from "react";
 import './App.css';
 import { useEffect, useState, memo, useCallback } from "react";
-import { useSelector, useDispatch } from './react-redux'
+import {useSelector, useDispatch, useBindActionCreator} from './react-redux'
 import { getMovies } from './moviesApi'
 import {render} from "@testing-library/react";
+import {deleteMoviesStartingFromId, deleteMoviesStartingFromIdActionCreator} from "./actionCreators";
 
 function selectCount(state) {
     return state.count;
@@ -15,6 +17,43 @@ function increment() {
 
 function decrement() {
     return { type: 'DECREMENT' }
+}
+
+class Image extends React.PureComponent {
+
+    state = {clicked: false}
+
+    componentDidMount() {
+        console.log("didMount", this.props.id);
+        const myDiv = document.getElementById(this.props.id);
+    }
+
+    render() {
+        const result = (
+            <div id={this.props.id}>
+                {this.props.src}
+                текст
+                <img alt={"картинка"} onClick={() => {
+                    this.setState({ clicked: true })
+                }}/>
+                {this.state.clicked ? "yes" : "no"}
+            </div>
+        )
+        return result;
+    }
+
+    componentWillUnmount() {
+        console.log(this.props.id, this.props.src);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("did update", this.props.id);
+    }
+
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return nextProps.src !== this.props.src || nextProps.id !== this.props.id;
+    //     // console.log("should update", this.props.id);
+    // }
 }
 
 export function Counter() {
@@ -54,32 +93,20 @@ function movieTitleSelector(state, id) {
     }
 }
 
-const MovieListItem = memo(({ id }) => {
+const MovieListItem = memo((props) => {
+  const id = props.id;
   const title = useSelector(movieTitleSelector, [id]);
-  const dispatch = useDispatch();
-
-  const count = useSelector((state) => {
-      return state.count;
-  })
-
-  const movies = useSelector((state) => {
-      return state.movies;
-  })
+  const deleteMoviesStartingFromId = useBindActionCreator(deleteMoviesStartingFromIdActionCreator);
 
   console.count('render')
 
   return (
       <li>
+        <Image src={title} id={id}/>
         {title}
         <button onClick={() => {
-          const firstIndex = movies.findIndex((movie) => {
-              return movie.id = id;
-          });
-          for (let i = firstIndex; i < firstIndex + count; i++) {
-              debugger
-              const movieId = movies[i].id;
-              dispatch({ type: "DELETE", payload: {id: movieId} })
-          }
+            const result = deleteMoviesStartingFromId(id)
+            console.log(result)
         }}>
           Удалить
         </button>
@@ -100,7 +127,7 @@ function MovieList() {
       (async () => {
           dispatch({ type: 'NEWMOVIES', payload: {json: await getMovies()} })
       })()
-  })
+  }, [])
 
   return (
       <div className="App">

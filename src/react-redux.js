@@ -1,7 +1,19 @@
 import React, {useContext, useEffect, useState} from "react";
 
-
 export const StoreContext = React.createContext( {} );
+
+export function useBindActionCreator(actionCreator) {
+    const myStore = useContext(StoreContext);
+    const dispatch = useDispatch();
+    function getState() {
+        return myStore.state;
+    }
+
+    return (id) => {
+        const fn = actionCreator(id);
+        return fn(dispatch, getState);
+    }
+}
 
 export function useSelector(selector, deps=[]) {
     const myStore = useContext(StoreContext);
